@@ -38,7 +38,7 @@ def logger(log_message):
 
 @logger('Getting Git Changes')
 def get_git_gitchanges() -> list: 
-  if os.environ.get("DRONE_PULL_REQUEST"):
+  if os.environ.get("WOODPECKER_PULL_REQUEST"):
     command = 'git --no-pager diff --name-only --diff-filter=d FETCH_HEAD FETCH_HEAD~1'
   else: 
     command = 'git --no-pager diff --name-only --diff-filter=d HEAD~1'
@@ -216,11 +216,11 @@ class Stack:
       {"name": k, "value": v} for k, v in env_from_file.items()
     ]
 
-    env_from_drone = [
+    env_from_woodpecker = [
       {"name": k, "value": v} for k, v in self.global_env.items()
     ]
 
-    return env_from_drone + env_from_file
+    return env_from_woodpecker + env_from_file
 
 
 @logger('======================== Starting ========================')
@@ -270,7 +270,7 @@ def main() -> None:
       )
 
       if skip_stack in stack.stack_name:
-        print(f'{stack.stack_name} skipped because it contains crucial infrastructure - Portainer, Gitea, Drone, Proxy. ')
+        print(f'{stack.stack_name} skipped because it contains crucial infrastructure - Portainer, Gitea, Woodpecker, Proxy. ')
         continue 
 
       if stack.stack_id:
