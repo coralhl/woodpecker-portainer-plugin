@@ -1,55 +1,14 @@
 ---
 steps:
-- name: "Test with Single file"
-  image: python:alpine
-  settings: 
-    portainer_instance:
-      from_secret: portainer_instance
-    portainer_endpoint_name: Chonky
-    portainer_username:
-      from_secret: portainer_username
-    portainer_password:
-      from_secret: portainer_password
-    global_env:
-      from_secret: compose_environment
-    docker_compose_file: ./test_files/docker-compose.yml
-  commands: 
-    - apk update && apk add git
-    - pip install pipreqs --disable-pip-version-check --root-user-action=ignore && pipreqs .
-    - pip install -r requirements.txt --force --disable-pip-version-check --root-user-action=ignore
-    - chmod +x portainer.py
-    - /usr/local/bin/python portainer.py 
-
-- name: "Test with Directory"
-  image: python:alpine
-  settings: 
-    portainer_instance:
-      from_secret: portainer_instance
-    portainer_endpoint_name: Chonky
-    portainer_username:
-      from_secret: portainer_username
-    portainer_password:
-      from_secret: portainer_password
-    global_env:
-      from_secret: compose_environment
-  commands:
-    - apk update && apk add git
-    - pip install pipreqs --disable-pip-version-check --root-user-action=ignore && pipreqs .
-    - pip install -r requirements.txt --force --disable-pip-version-check --root-user-action=ignore
-    - chmod +x portainer.py
-    - /usr/local/bin/python portainer.py 
-
----
-steps:
 - name: "Build & Push -> Docker Hub"
   image: plugins/docker
   environment:
     PLUGIN_AUTO_LABEL: false
   settings:
     username: 
-      from_secret: dh_coralhl_username
+      from_secret: dockerhub_username
     password:
-      from_secret: dh_coralhl_password
+      from_secret: dockerhub_password
     context: .
     dockerfile: Dockerfile
     repo: coralhl/woodpecker-portainer-plugin
@@ -59,12 +18,10 @@ steps:
 - name: "Test Deploy Compose"
   image: coralhl/woodpecker-portainer-plugin
   settings: 
-    # doesn't need to be a secret
     portainer_instance:
       from_secret: portainer_instance
     # default name might be local or Primary
-    portainer_endpoint_name: Chonky
-    # doesn't need to be a secret
+    portainer_endpoint_name: local
     portainer_username:
       from_secret: portainer_username
     portainer_password:
