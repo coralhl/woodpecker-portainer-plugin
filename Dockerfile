@@ -4,7 +4,7 @@ WORKDIR /app
 
 COPY ./portainer.py ./portainer.py
 
-RUN apk add --update git
+RUN apk --no-cache add --update git
 
 RUN pip install pipreqs
 RUN pipreqs . --encoding=utf8 --force
