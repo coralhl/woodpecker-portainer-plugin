@@ -1,20 +1,5 @@
 ---
 steps:
-- name: "Build & Push -> Docker Hub"
-  image: plugins/docker
-  environment:
-    PLUGIN_AUTO_LABEL: false
-  settings:
-    username: 
-      from_secret: dockerhub_username
-    password:
-      from_secret: dockerhub_password
-    context: .
-    dockerfile: Dockerfile
-    repo: coralhl/woodpecker-portainer-plugin
-    tags:
-    - latest
-
 - name: "Test Deploy Compose"
   image: coralhl/woodpecker-portainer-plugin
   settings: 
@@ -31,3 +16,6 @@ steps:
       from_secret: compose_environment
     # optional // forces plugin to update only this compose
     docker_compose_file: ./test_files/docker-compose.yml
+
+depends_on:
+  - build
