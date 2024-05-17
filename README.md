@@ -1,6 +1,6 @@
-# Drone-Portainer Plugin
+# Woodpecker-Portainer Plugin
 
-[![Docker Pulls](https://img.shields.io/docker/pulls/tenekev/drone-portainer-plugin?style=for-the-badge&logo=docker)](https://hub.docker.com/r/tenekev/drone-portainer-plugin)
+[![Docker Pulls](https://img.shields.io/docker/pulls/coralhl/woodpecker-portainer-plugin?style=for-the-badge&logo=docker)](https://hub.docker.com/r/coralhl/woodpecker-portainer-plugin)
 ![Python](https://img.shields.io/badge/Python-v3.10-f7cb40?style=for-the-badge&logo=python)
 ![Portainer](https://img.shields.io/badge/Portainer-v2.18-13bef9?style=for-the-badge&logo=portainer)
 
@@ -11,15 +11,15 @@ Portainer is great for management of docker at a glance but it locks you into us
 
 ## How it works
 
-By default the drone-portainer-plugin check recursively for changed `docker-compose.yml` files in the workspace and applies them to the provided Portainer instance.
+By default the woodpecker-portainer-plugin check recursively for changed `docker-compose.yml` files in the workspace and applies them to the provided Portainer instance.
 
-Simply put, when you push a changed docker-compose to the repo, Drone detects it and updates the corresponding Portainer Stack, based on name.
+Simply put, when you push a changed docker-compose to the repo, Woodpecker detects it and updates the corresponding Portainer Stack, based on name.
 
 The name is taken either from the directory of the docker-compose.yml file OR from the top-level element `name`, if it's defined in the docker-compose.yml
 
 ```yml
 - name: "Test Deploy Compose"
-  image: tenekev/drone-portainer-plugin
+  image: coralhl/woodpecker-portainer-plugin
   settings: 
     portainer_instance: https://my.portainer.lan 
     
@@ -54,14 +54,15 @@ The name is taken either from the directory of the docker-compose.yml file OR fr
 
 ## ⚠️#3 Crucial infrastructure. The importaince of `stack_init`
 ```
-{Code Editor} --> [Reverse Proxy] --> [Gitea] --> [Drone] --> [Portainer] --> {Deploy}
+{Code Editor} --> [Reverse Proxy] --> [Gitea] --> [Woodpecker] --> [Portainer] --> {Deploy}
 ```
 
 In order to deploy changes to the Docker environment, you need a working infrastructure. If you try to update a stack that contains parts of this crucial infrastructure, the process will break and you will have to recover it manually. 
-That's why it's advised to define these crucial services in an **"initializing"** stack. A stack that goes up before anything else is started in your Docker environment. I name this stack `stack_init`. A stack that contains `stack_init` in the name will be ignored by the drone-portainer-plugin. You can override the name and use your own by defining `docker_compose_skip` argument.
+That's why it's advised to define these crucial services in an **"initializing"** stack. A stack that goes up before anything else is started in your Docker environment. I name this stack `stack_init`. A stack that contains `stack_init` in the name will be ignored by the woodpecker-portainer-plugin. You can override the name and use your own by defining `docker_compose_skip` argument.
 
-Here is an exmaple: My `stack_init` contains Portainer, Gitea, Drone and RP of choice - Traefik. Changes to this stack are ignored by the drone-portainer-plugin. It's the only stack that requires you to use `docker compose up` command. There is no other rational way to do it.
+Here is an exmaple: My `stack_init` contains Portainer, Gitea, Woodpecker and RP of choice - Traefik. Changes to this stack are ignored by the woodpecker-portainer-plugin. It's the only stack that requires you to use `docker compose up` command. There is no other rational way to do it.
 
 ## Inspired by
+* [tenekev/drone-portainer-plugin](https://github.com/tenekev/drone-portainer-plugin)
 * [robkaandorp/drone-portainer](https://github.com/robkaandorp/drone-portainer) 
 * [Deploy docker-compose.yml automatically with drone.io and gitea](https://www.reddit.com/r/homelab/comments/yghttb/deploy_dockercomposeyml_automatically_with/)

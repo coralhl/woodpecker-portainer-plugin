@@ -1,10 +1,5 @@
 ---
-kind: pipeline
-type: docker
-name: Testing
-
 steps:
-
 - name: "Test with Single file"
   image: python:alpine
   settings: 
@@ -45,16 +40,6 @@ steps:
     - /usr/local/bin/python portainer.py 
 
 ---
-kind: pipeline
-type: docker
-name: Building
-
-trigger:
-  branch:
-    - release
-# git push origin main:release
-# git commit -a -m "Release this"; git stage; git push origin main; git push origin main:release
-
 steps:
 - name: "Build & Push -> Docker Hub"
   image: plugins/docker
